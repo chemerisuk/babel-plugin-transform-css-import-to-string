@@ -6,11 +6,9 @@ const autoprefixer = require("autoprefixer");
 const csswring = require("csswring");
 const cssvariables = require("postcss-css-variables");
 
-const browsers = ["ChromeAndroid 30", "iOS 7", "IE 10"];
-const prefixer = postcss([ cssvariables(), autoprefixer({browsers}), csswring ]);
-
-module.exports = babel => {
-  const t = babel.types;
+module.exports = (b, options) => {
+  const t = b.types;
+  const prefixer = postcss([ cssvariables(), autoprefixer(options), csswring ]);
 
   return {
     visitor: {
@@ -34,4 +32,3 @@ module.exports = babel => {
     }
   };
 };
-
