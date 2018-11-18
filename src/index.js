@@ -1,9 +1,10 @@
-import fs from 'fs';
-import p from 'path';
-import postcssJs from 'postcss-js';
-import autoprefixer from 'autoprefixer';
-import csswring from 'csswring';
-import customProperties from 'postcss-custom-properties';
+const fs = require("fs");
+const p = require("p");
+
+const postcssJs = require("postcss-js");
+const autoprefixer = require("autoprefixer");
+const csswring = require("csswring");
+const customProperties = require("postcss-custom-properties");
 
 const browsers = ["ChromeAndroid 30", "iOS 7", "IE 10"];
 const prefixer = postcssJs.sync([ customProperties(), autoprefixer({browsers}), csswring ]);
@@ -12,11 +13,13 @@ function endsWith(str, search) {
   return str.indexOf(search, str.length - search.length) !== -1;
 }
 
-export default function ({ types: t }) {
+module.exports = babel => {
+  const t = babel.types;
+
   return {
     visitor: {
       ImportDeclaration: {
-        exit: function(path, state) {
+        exit(path, state) {
           const node = path.node;
 
           if (endsWith(node.source.value, '.css')) {
@@ -33,4 +36,5 @@ export default function ({ types: t }) {
       }
     }
   };
-}
+};
+
