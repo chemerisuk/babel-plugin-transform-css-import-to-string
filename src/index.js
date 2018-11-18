@@ -1,7 +1,12 @@
 import fs from 'fs';
 import p from 'path';
-import rework from 'rework';
-import reworkImport from 'rework-import';
+import postcssJs from 'postcss-js';
+import autoprefixer from 'autoprefixer';
+import csswring from 'csswring';
+import customProperties from 'postcss-custom-properties';
+
+const browsers = ["ChromeAndroid 30", "iOS 7", "IE 10"];
+const prefixer = postcssJs.sync([ customProperties(), autoprefixer({browsers}), csswring ]);
 
 function endsWith(str, search) {
   return str.indexOf(search, str.length - search.length) !== -1;
@@ -17,10 +22,7 @@ export default function ({ types: t }) {
           if (endsWith(node.source.value, '.css')) {
             const dir = p.dirname(p.resolve(state.file.opts.filename));
             const absolutePath = p.resolve(dir, node.source.value);
-
-            const css = rework(fs.readFileSync(absolutePath, "utf8"))
-              .use(reworkImport({path: p.dirname(absolutePath)}))
-              .toString({compress: true});
+            const css = prefixer(fs.readFileSync(absolutePath, "utf8"));
 
             path.replaceWith(t.variableDeclaration("var", [
               t.variableDeclarator(
