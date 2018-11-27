@@ -31,6 +31,7 @@
     "csswring": "^7.0.0",
     "deasync-promise": "^1.0.1",
     "postcss": "^7.0.6",
+    "postcss-calc": "^7.0.1",
     "postcss-preset-env": "^6.4.0"
   }
 }

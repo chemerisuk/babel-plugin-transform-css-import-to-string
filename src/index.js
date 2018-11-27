@@ -4,11 +4,12 @@ const p = require("path");
 const postcss = require("postcss");
 const csswring = require("csswring");
 const postcssPresetEnv = require("postcss-preset-env");
+const postcssCalc = require("postcss-calc");
 const deasyncPromise = require("deasync-promise");
 
 module.exports = (b, options) => {
   const t = b.types;
-  const prefixer = postcss([ postcssPresetEnv(options), csswring ]);
+  const prefixer = postcss([ postcssPresetEnv(options), postcssCalc(), csswring ]);
 
   return {
     visitor: {
