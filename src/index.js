@@ -2,13 +2,13 @@ const fs = require("fs");
 const p = require("path");
 
 const postcss = require("postcss");
-const autoprefixer = require("autoprefixer");
 const csswring = require("csswring");
-const cssvariables = require("postcss-css-variables");
+const postcssPresetEnv = require("postcss-preset-env");
+const deasyncPromise = require("deasync-promise");
 
 module.exports = (b, options) => {
   const t = b.types;
-  const prefixer = postcss([ cssvariables(), autoprefixer(options), csswring ]);
+  const prefixer = postcss([ postcssPresetEnv(options), csswring ]);
 
   return {
     visitor: {
@@ -20,7 +20,7 @@ module.exports = (b, options) => {
             const dir = p.dirname(p.resolve(state.file.opts.filename));
             const absolutePath = p.resolve(dir, node.source.value);
             const cssText = fs.readFileSync(absolutePath, "utf8");
-            const result = prefixer.process(cssText);
+            const result = deasyncPromise(prefixer.process(cssText, {from: absolutePath}));
 
             path.replaceWith(t.variableDeclaration("var", [
               t.variableDeclarator(
